@@ -89,15 +89,27 @@
                 str = '<div class="atalk"><span>A说 :' + TalkWords.value +'</span></div>';
                 //str = '<div class="btalk"><span>B说 :' + TalkWords.value +'</span></div>' ;  
                 Words.innerHTML = Words.innerHTML + str;
+                var session_id = sessionStorage.getItem('session_id')
+                var setData = {text:TalkWords.value}
+                if(session_id){setData['session_id']=session_id}
                 $.ajax({
                     type: 'POST',
                     url: '/sendMsg',
                     contentType: 'application/json',
-                    data: JSON.stringify({text:TalkWords.value}),
+                    data: JSON.stringify(setData),
                     success: function(res){
-                        if(res.score>0.7){
-                            Words.innerHTML = Words.innerHTML + '<div class="btalk"><span>您是想问“' + res.texts.text_2 +'”</span></div>';
+                        if(res.error_code === 0){
+                            var bot_session = JSON.parse(res.result.bot_session)
+                            if(bot_session){
+                                sessionStorage.setItem('session_id',bot_session.session_id)
+                            }else{
+                                sessionStorage.setItem('session_id','')
+                            }
+                            Words.innerHTML = Words.innerHTML + '<div class="btalk"><span>' + res.result.response.action_list[0].say +'</span></div>';
+                        }else{
+                            alert(res.error_msg)
                         }
+                       
                     },
                     dataType: 'json'
                 });
