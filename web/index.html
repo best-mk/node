@@ -72,6 +72,7 @@
     <script type="text/javascript">      
     // 
         window.onload = function(){
+            sessionStorage.setItem('session_id','')
             var Words = document.getElementById("words");
             var Who = document.getElementById("who");
             var TalkWords = document.getElementById("talkwords");
@@ -90,8 +91,10 @@
                 //str = '<div class="btalk"><span>B说 :' + TalkWords.value +'</span></div>' ;  
                 Words.innerHTML = Words.innerHTML + str;
                 var session_id = sessionStorage.getItem('session_id')
+                var origin = sessionStorage.getItem('origin')
                 var setData = {text:TalkWords.value}
                 if(session_id){setData['session_id']=session_id}
+                if(origin){setData['origin']=origin}
                 $.ajax({
                     type: 'POST',
                     url: '/sendMsg',
@@ -99,13 +102,14 @@
                     data: JSON.stringify(setData),
                     success: function(res){
                         if(res.error_code === 0){
-                            var bot_session = JSON.parse(res.result.bot_session)
-                            if(bot_session){
-                                sessionStorage.setItem('session_id',bot_session.session_id)
+                            //var bot_session = JSON.parse(res.result.bot_session)
+                            sessionStorage.setItem('origin',res.result.response_list[0].origin)
+                            if(sessionStorage.getItem('session_id')){
+                                
                             }else{
-                                sessionStorage.setItem('session_id','')
+                                sessionStorage.setItem('session_id',res.result.session_id)
                             }
-                            Words.innerHTML = Words.innerHTML + '<div class="btalk"><span>' + res.result.response.action_list[0].say +'</span></div>';
+                            Words.innerHTML = Words.innerHTML + '<div class="btalk"><span>' + res.result.response_list[0].action_list[0].say +'</span></div>';
                         }else{
                             alert(res.error_msg)
                         }

@@ -58,25 +58,26 @@ ai.post("/sendMsg",function(req,res){
 		'version': '2.0',
 		'request': {
 			'user_id': '88888',
-			'query_info': {
-				'asr_candidates': [],
-				'type': 'TEXT',
-				'source': 'KEYBOARD'
-			 },
-			 'bernard_level': 1, 
-			 'updates': '',
-			 'query': text1,
-			 'client_session': '{"client_results":"", "candidate_options":[]}'
+			'query': text1,
 		},
-		'bot_session': '',
-		'bot_id': '49631'
+		'dialog_state': {
+			'contexts': {
+				'SYS_REMEMBERED_SKILLS': ['49631']
+			}
+		},
+		'session_id': '',
+		'service_id': 'S17156'
 	}
 	if(req.body.session_id){
-		setData.bot_session = JSON.stringify({'session_id':req.body.session_id})
+		setData.session_id = req.body.session_id
 	}
+	// if(req.body.origin){
+	// 	setData.dialog_state.contexts.SYS_REMEMBERED_SKILLS.push(req.body.origin)
+	// }
+	// console.log(setData)
 	request(
 		{
-			url: 'https://aip.baidubce.com/rpc/2.0/unit/bot/chat?access_token=' + token,
+			url: 'https://aip.baidubce.com/rpc/2.0/unit/service/chat?access_token=' + token,
 			method: 'POST',
 			json: true,
 			headers: {
