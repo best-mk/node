@@ -62,7 +62,7 @@ ai.post("/sendMsg",function(req,res){
 		},
 		'dialog_state': {
 			'contexts': {
-				'SYS_REMEMBERED_SKILLS': ['49631']
+				'SYS_REMEMBERED_SKILLS': ['59938','49631']
 			}
 		},
 		'session_id': '',
@@ -70,6 +70,9 @@ ai.post("/sendMsg",function(req,res){
 	}
 	if(req.body.session_id){
 		setData.session_id = req.body.session_id
+	}
+	var toClaim = function(){
+		
 	}
 	// if(req.body.origin){
 	// 	setData.dialog_state.contexts.SYS_REMEMBERED_SKILLS.push(req.body.origin)

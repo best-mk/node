@@ -78,6 +78,13 @@
             var TalkWords = document.getElementById("talkwords");
             var TalkSub = document.getElementById("talksub");
             
+            var toClaim = function(res){
+                var html = '请点击链接https://www.baidu.com理赔您的'
+                res.forEach(function(item,index){
+                    html += item.normalized_word
+                })
+                Words.innerHTML = Words.innerHTML + '<div class="btalk"><span>' + html +'</span></div>';
+            }
 
             TalkSub.onclick = function(){
 	            //定义空字符串
@@ -109,7 +116,12 @@
                             }else{
                                 sessionStorage.setItem('session_id',res.result.session_id)
                             }
-                            Words.innerHTML = Words.innerHTML + '<div class="btalk"><span>' + res.result.response_list[0].action_list[0].say +'</span></div>';
+                            if(res.result.response_list[0].action_list[0].type == 'event'){
+                                console.log(JSON.parse(res.result.response_list[0].action_list[0].custom_reply).func)
+                                toClaim(res.result.response_list[0].schema.slots)
+                            }else{
+                                Words.innerHTML = Words.innerHTML + '<div class="btalk"><span>' + res.result.response_list[0].action_list[0].say +'</span></div>';
+                            }
                         }else{
                             alert(res.error_msg)
                         }
